@@ -1,0 +1,55 @@
+DROP SEQUENCE produto_sequence;
+DROP SEQUENCE categoria_sequence;
+DROP TRIGGER tr_insert_id_produto;
+DROP TRIGGER tr_insert_id_categoria;
+DROP TABLE PRODUTO;
+DROP TABLE CATEGORIA;
+
+CREATE TABLE CATEGORIA(
+  idCategoria integer PRIMARY KEY NOT NULL,
+  nome varchar(45) NOT NULL
+);
+
+
+CREATE TABLE PRODUTO (
+  idProduto NUMBER PRIMARY KEY NOT NULL,
+  nome VARCHAR2(45) NOT NULL,
+  descricao VARCHAR2(200) NOT NULL,
+  preco NUMBER(10, 2) NOT NULL,
+  idCategoria NUMBER NOT NULL,
+  CONSTRAINT FK_CATEGORIA FOREIGN KEY (idCategoria) REFERENCES CATEGORIA (idCategoria)
+);
+
+
+CREATE SEQUENCE produto_sequence START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER tr_insert_id_produto
+BEFORE INSERT ON PRODUTO FOR EACH ROW       
+BEGIN
+ 
+SELECT produto_sequence.NEXTVAL
+INTO :NEW.idProduto
+FROM DUAL;
+END;
+/
+
+
+CREATE SEQUENCE categoria_sequence START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE TRIGGER tr_insert_id_categoria
+BEFORE INSERT ON CATEGORIA FOR EACH ROW       
+BEGIN
+ 
+SELECT CATEGORIA_SEQuence.NEXTVAL
+INTO :new.idcategoria
+FROM DUAL;
+END;
+/
+
+INSERT INTO categoria (nome) VALUES ('Eletronicos');
+INSERT INTO categoria (nome) VALUES ('Games');
+INSERT INTO categoria (nome) VALUES ('Eletrodomesticos');
+INSERT INTO categoria (nome) VALUES ('Alimentos');
+INSERT INTO categoria (nome) VALUES ('Brinquedos');
+
+COMMIT;
